@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppComponent } from './app.component';
 import { PreloadAllModules, RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UiModule } from '@weather-app/ui';
 
 @NgModule({
   declarations: [AppComponent],
@@ -11,10 +12,10 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     BrowserModule,
     RouterModule.forRoot([], {
       preloadingStrategy: PreloadAllModules,
-      scrollPositionRestoration: 'enabled',
-      initialNavigation: 'enabledBlocking'
+      scrollPositionRestoration: 'enabled'
     }),
     BrowserAnimationsModule,
+    UiModule
   ],
   providers: [],
   bootstrap: [AppComponent]

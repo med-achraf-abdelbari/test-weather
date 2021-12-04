@@ -1,0 +1,50 @@
+<div class='row'>
+  <div class='col-12 d-flex justify-content-center align-items-center'>
+    <h1><strong>Simple Weather forecast</strong></h1>
+  </div>
+</div>
+
+<form [formGroup]='filterForm'>
+  <div class='row p-2'>
+    <div class='col-sm-12 col-md-6'>
+      <p>
+        <mat-form-field appearance='legacy' style='width: 100%'>
+          <mat-label>City</mat-label>
+          <input formControlName='cityName' matInput placeholder='Type city name here'>
+          <mat-icon matSuffix>search</mat-icon>
+        </mat-form-field>
+      </p>
+    </div>
+    <div class='col-sm-12 col-md-6'>
+      <mat-form-field appearance='fill' style='width: 100%'>
+        <mat-label>Choose a period</mat-label>
+        <mat-select formControlName='filterType'>
+          <mat-option *ngFor='let period of periods' [value]=period>{{period}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+  </div>
+</form>
+
+<div class='row p-2'>
+  <div *ngIf="data else chooseCity" class='col-sm-12'>
+    <table [dataSource]='data' class='mat-elevation-z8 w-100' mat-table>
+      <ng-container *ngFor='let column of displayedColumns' [matColumnDef]='column'>
+        <th *matHeaderCellDef mat-header-cell> {{column}} </th>
+        <td *matCellDef='let element' mat-cell> {{element[column]}} </td>
+      </ng-container>
+
+      <tr *matHeaderRowDef='columnsToDisplay' mat-header-row></tr>
+      <tr *matRowDef='let row; columns: columnsToDisplay;' mat-row></tr>
+    </table>
+  </div>
+</div>
+
+<ng-template #chooseCity>
+  <div class='col-12 d-flex justify-content-center align-items-center flex-wrap'>
+    <div class='col-12 text-center'>
+      <mat-icon matSuffix>search</mat-icon>
+    </div>
+    <div class='col-12 text-center'>Please choose a city!</div>
+  </div>
+</ng-template>
