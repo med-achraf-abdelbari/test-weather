@@ -1,1 +1,1 @@
-export * from './lib/store.module';
+export * from './lib/app-store.module';

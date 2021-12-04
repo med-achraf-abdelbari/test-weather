@@ -9,6 +9,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
+import { AppStoreModule } from '@weather-app/store';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { MatTableModule } from '@angular/material/table';
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
+    AppStoreModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
