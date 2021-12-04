@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@weather-app/services": ["libs/services/src/index.ts"],
+      "@weather-app/store": ["libs/store/src/index.ts"],
+      "@weather-app/ui": ["libs/ui/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
