@@ -19,7 +19,15 @@ export class GetLocationByCityNameActionFailure implements Action {
   }
 }
 
+export class ResetErrorOnFailure implements Action {
+  readonly type = LocationActionTypes.RESET_ERROR;
+  constructor() {
+  }
+}
+
+
 export type LocationActions =
   GetLocationByCityNameAction
 | GetLocationByCityNameActionSuccess
 | GetLocationByCityNameActionFailure
+| ResetErrorOnFailure

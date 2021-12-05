@@ -20,7 +20,14 @@ function reducer(state = locationInitialState, action: LocationActions) {
       return {
         ...state,
         loading: false,
+        activeLocation : null,
         error: action.payload
+      };
+    case LocationActionTypes.RESET_ERROR:
+      return {
+        ...state,
+        activeLocation : null,
+        error: null
       };
     default:
       return state;

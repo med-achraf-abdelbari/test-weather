@@ -9,7 +9,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table';
-import { AppStoreModule } from '@weather-app/store';
+import { StoreModule } from '@ngrx/store';
+import { appEffect, appReducers } from '../../../store/src/lib/ngrx-store';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,8 @@ import { AppStoreModule } from '@weather-app/store';
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    AppStoreModule,
+    StoreModule.forRoot(appReducers, {}),
+    EffectsModule.forRoot(appEffect),
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,

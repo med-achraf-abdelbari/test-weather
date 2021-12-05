@@ -10,7 +10,7 @@
       <p>
         <mat-form-field appearance='legacy' style='width: 100%'>
           <mat-label>City</mat-label>
-          <input (blur)='getCoordinates()' formControlName='cityName' matInput placeholder='Type city name here'>
+          <input (blur)='triggerGetCoordinates()' formControlName='cityName' matInput placeholder='Type city name here'>
           <mat-icon matSuffix>search</mat-icon>
         </mat-form-field>
       </p>
@@ -18,7 +18,7 @@
     <div class='col-sm-12 col-md-6'>
       <mat-form-field appearance='fill' style='width: 100%'>
         <mat-label>Choose a period</mat-label>
-        <mat-select [disabled]='!activeLocation' (selectionChange)="getWeatherCast()" formControlName='filterType'>
+        <mat-select [disabled]='!activeLocation' (selectionChange)="dispatchGetWeatherCast()" formControlName='filterType'>
           <mat-option *ngFor='let period of periods' [value]="period.value">{{period.label}}</mat-option>
         </mat-select>
       </mat-form-field>

@@ -22,8 +22,7 @@ export class LocationEffects {
     switchMap((cityName: string) => {
       return this.apiService.getLocationByCityName(cityName).pipe(map((res: any) => {
           if(!res?.length){
-            alert('No city found , please try again!')
-            return of(new GetLocationByCityNameActionFailure('NO CITY FOUND'));
+            return new GetLocationByCityNameActionFailure('NO CITY FOUND');
           }else{
             return new GetLocationByCityNameActionSuccess(res);
           }
