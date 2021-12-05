@@ -49,7 +49,6 @@ export class MainComponent implements OnInit {
         if (this.filterForm.get('filterType')?.value !== 'hourly') {
           this.handleDataHourly(data);
         } else {
-          debugger
           this.handleDataDaily(data);
         }
       }
