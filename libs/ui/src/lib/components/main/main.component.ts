@@ -3,6 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { LocationFacadeService } from '../../../../../store/src/lib/facades/location/location-facade.service';
 import { WeatherFacadeService } from '../../../../../store/src/lib/facades/weather/weather-facade.service';
 import { week } from '../../constants/days';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 @Component({
   selector: 'weather-app-main',
@@ -12,8 +13,8 @@ import { week } from '../../constants/days';
 export class MainComponent implements OnInit {
 
   filterForm = this.fb.group({
-    cityName: ['', [Validators.required]],
-    filterType: ['', []]
+    cityName: [null, [Validators.required]],
+    filterType: [null, [Validators.required]]
   });
   // There is an issue with weather api (response with hourly param has daily table and opposite for daily)
   periods = [{ label: 'Daily', value: 'hourly' }, { label: 'Hourly', value: 'daily' }];
@@ -22,22 +23,53 @@ export class MainComponent implements OnInit {
   data: any;
   activeLocation: any;
 
-  constructor(private fb: FormBuilder, private locationFacade: LocationFacadeService, private weatherFacade: WeatherFacadeService) {
+  constructor(private fb: FormBuilder,
+              private locationFacade: LocationFacadeService,
+              private weatherFacade: WeatherFacadeService,
+              private router: Router,
+              private route: ActivatedRoute) {
   }
 
   ngOnInit() {
     this.getCoordinates();
     this.getWeatherCast();
+    this.handleQueryParams();
   }
 
   getCoordinates() {
     this.locationFacade.getActiveLocation().subscribe((data: any) => {
       this.activeLocation = data;
+      this.dispatchGetWeatherCast();
     });
     this.locationFacade.getLocationError().subscribe((err) => {
       if (err) {
         this.resetData();
       }
+    });
+  }
+
+  handleQueryParams() {
+    this.filterForm.valueChanges.subscribe((filterData)=>{
+      const queryParams: Params = filterData;
+      this.router.navigate(
+        [],
+        {
+          relativeTo: this.route,
+          queryParams: queryParams,
+          queryParamsHandling: 'merge', // remove to replace all query params by provided
+        });
+    })
+    this.route.queryParams.subscribe((params:any) => {
+      console.log(params);
+      if(params){
+        for (const param in params){
+          this.filterForm.controls[param].setValue(params[param]);
+        }
+        if(this.filterForm.get('cityName')!.valid){
+          this.triggerGetCoordinates();
+        }
+      }
+      console.log(this.filterForm);
     });
   }
 

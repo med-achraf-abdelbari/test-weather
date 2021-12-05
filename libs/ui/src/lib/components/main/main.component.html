@@ -17,8 +17,8 @@
     </div>
     <div class='col-sm-12 col-md-6'>
       <mat-form-field appearance='fill' style='width: 100%'>
-        <mat-label>Choose a period</mat-label>
-        <mat-select [disabled]='!activeLocation' (selectionChange)="dispatchGetWeatherCast()" formControlName='filterType'>
+        <mat-label>Choose a period </mat-label>
+        <mat-select [disabled]="!activeLocation && !filterForm.controls['filterType'].value" [value]="filterForm.controls['filterType'].value" (selectionChange)="dispatchGetWeatherCast()" formControlName="filterType">
           <mat-option *ngFor='let period of periods' [value]="period.value">{{period.label}}</mat-option>
         </mat-select>
       </mat-form-field>
