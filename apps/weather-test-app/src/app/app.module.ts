@@ -16,8 +16,6 @@ import { AppStoreModule } from '@weather-app/store';
   imports: [
     BrowserModule,
     AppStoreModule,
-    StoreModule.forRoot(appReducers, {}),
-    EffectsModule.forRoot(appEffect),
     RouterModule.forRoot([], {
       preloadingStrategy: PreloadAllModules,
       scrollPositionRestoration: 'enabled'
