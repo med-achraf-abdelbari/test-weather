@@ -10,10 +10,11 @@ function reducer(state = weatherInitialState, action: WeatherActions) {
         loading: true
       };
     case WeatherActionTypes.GET_WEATHER_SUCCESS:
+      console.log(action.payload);
       return {
         ...state,
         activeWeatherCast: action.payload,
-        locations: [...state.weatherList, action.payload],
+        weatherList: [...state.weatherList, action.payload],
         loading: false
       };
     case WeatherActionTypes.GET_WEATHER_FAILURE:

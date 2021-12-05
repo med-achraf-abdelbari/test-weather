@@ -28,9 +28,6 @@ export class MainComponent implements OnInit {
     this.filterForm.valueChanges.subscribe((data) => {
       console.log(data);
     });
-    this.weatherFacade.getActiveLocation().subscribe((data)=>{
-      console.log(data);
-    })
   }
 
   getCoordinates() {
@@ -43,22 +40,18 @@ export class MainComponent implements OnInit {
   }
 
   getWeatherCast() {
-
     if (this.filterForm.valid && this.activeLocation) {
       this.weatherFacade.dispatchGetWeather({
         period : this.filterForm.get('filterType')?.value,
         long : this.activeLocation?.lon,
         lat : this.activeLocation?.lat
       });
+      this.weatherFacade.getActiveLocation().subscribe((data)=>{
+       if(data){
+         debugger;
+       }
+      })
     }
-  }
-
-  handleCityNotFound(){
-    this.locationFacade.getLocationError().subscribe((err)=>{
-      if(err){
-        alert(err);
-      }
-    })
   }
 
   // addColumn() {

@@ -18,7 +18,6 @@ import { AppStoreModule } from '@weather-app/store';
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    AppStoreModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
