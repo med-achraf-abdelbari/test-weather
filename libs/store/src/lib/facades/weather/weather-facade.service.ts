@@ -20,7 +20,7 @@ export class WeatherFacadeService {
     return this.store.select(activeWeatherSelector);
   }
 
-  getAllCachedLocations() {
+  getAllCachedWeathers() {
     return this.store.select(cachedWeathersSelector);
   }
 

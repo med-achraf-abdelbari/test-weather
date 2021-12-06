@@ -89,7 +89,8 @@ export class MainComponent implements OnInit {
 
   handleDataHourly(data: any) {
     const weatherData = this.sliceArray(data.hourly.slice(0, 23), 3).map((step: any[]) => {
-      return step.map(weather => weather.temp).reduce((previousValue, currentValue) => (previousValue + currentValue) / 3).toFixed(0);
+      // return step.map(weather => weather.temp).reduce((previousValue, currentValue) => (previousValue + currentValue) / 3).toFixed(0);
+      return step.map(weather => weather.temp)[0]
     });
     let tableData: any = {};
     this.displayedColumns = [];
