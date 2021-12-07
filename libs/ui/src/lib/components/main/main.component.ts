@@ -1,27 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { LocationFacadeService } from '../../../../../store/src/lib/facades/location/location-facade.service';
 import { WeatherFacadeService } from '../../../../../store/src/lib/facades/weather/weather-facade.service';
 import { week } from '../../constants/days';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { PERIODS } from '../../constants/periods';
+import { Subscription, take } from 'rxjs';
 
 @Component({
   selector: 'weather-app-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss']
 })
-export class MainComponent implements OnInit {
+export class MainComponent implements OnInit, OnDestroy {
 
   filterForm = this.fb.group({
     cityName: [null, [Validators.required]],
     filterType: [null, [Validators.required]]
   });
   // There is an issue with weather api (response with hourly param has daily table and opposite for daily)
-  periods = [{ label: 'Daily', value: 'hourly' }, { label: 'Hourly', value: 'daily' }];
+  periods = [{ label: 'Daily', value: PERIODS.HOURLY }, { label: 'Hourly', value: PERIODS.DAILY }];
   displayedColumns!: string[];
   columnsToDisplay!: string[];
   data: any;
   activeLocation: any;
+
+  subscriptions = new Subscription();
 
   constructor(private fb: FormBuilder,
               private locationFacade: LocationFacadeService,
@@ -37,60 +41,65 @@ export class MainComponent implements OnInit {
   }
 
   getCoordinates() {
-    this.locationFacade.getActiveLocation().subscribe((data: any) => {
-      this.activeLocation = data;
-      this.dispatchGetWeatherCast();
-    });
-    this.locationFacade.getLocationError().subscribe((err) => {
-      if (err) {
-        this.resetData();
-      }
-    });
+    this.subscriptions.add(
+      this.locationFacade.getActiveLocation().subscribe((data: any) => {
+        this.activeLocation = data;
+        this.dispatchGetWeatherCast();
+      }));
+    this.subscriptions.add(
+      this.locationFacade.getLocationError().subscribe((err) => {
+        if (err) {
+          this.resetData();
+        }
+      }));
   }
 
   handleQueryParams() {
-    this.filterForm.valueChanges.subscribe((filterData)=>{
+    this.subscriptions.add(this.filterForm.valueChanges.subscribe((filterData) => {
       const queryParams: Params = filterData;
       this.router.navigate(
         [],
         {
           relativeTo: this.route,
           queryParams: queryParams,
-          queryParamsHandling: 'merge', // remove to replace all query params by provided
+          queryParamsHandling: 'merge' // remove to replace all query params by provided
         });
-    })
-    this.route.queryParams.subscribe((params:any) => {
+    }));
+    this.subscriptions.add(
+      this.route.queryParams.pipe(take(1)).subscribe((params: any) => {
       console.log(params);
-      if(params){
-        for (const param in params){
+      if (params) {
+        for (const param in params) {
           this.filterForm.controls[param].setValue(params[param]);
         }
-        if(this.filterForm.get('cityName')!.valid){
+        if (this.filterForm.get('cityName')!.valid) {
           this.triggerGetCoordinates();
         }
       }
       console.log(this.filterForm);
-    });
+    }));
   }
 
   getWeatherCast() {
-    this.weatherFacade.getActiveLocation().subscribe((data) => {
-      if (data) {
-        // check API  data (should return 24 )
-        // daily and hourly filter params in api are in reverse
-        if (this.filterForm.get('filterType')?.value !== 'hourly') {
-          this.handleDataHourly(data);
-        } else {
-          this.handleDataDaily(data);
+    this.subscriptions.add(
+      this.weatherFacade.getActiveLocation().subscribe((data) => {
+        if (data) {
+          // check API  data (should return 24 )
+          // daily and hourly filter params in api are in reverse
+          if (this.filterForm.get('filterType')?.value !== 'hourly') {
+            this.handleDataHourly(data);
+          } else {
+            this.handleDataDaily(data);
+          }
         }
-      }
-    });
+      })
+    );
   }
 
   handleDataHourly(data: any) {
     const weatherData = this.sliceArray(data.hourly.slice(0, 23), 3).map((step: any[]) => {
       // return step.map(weather => weather.temp).reduce((previousValue, currentValue) => (previousValue + currentValue) / 3).toFixed(0);
-      return step.map(weather => weather.temp)[0]
+      return step.map(weather => weather.temp)[0];
     });
     let tableData: any = {};
     this.displayedColumns = [];
@@ -154,5 +163,7 @@ export class MainComponent implements OnInit {
     this.locationFacade.dispatchClearLocationError();
   }
 
-
+  ngOnDestroy() {
+    this.subscriptions.unsubscribe();
+  }
 }
